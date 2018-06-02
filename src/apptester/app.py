@@ -24,6 +24,8 @@ def apptester():
     for a, v in request.args.items():
         response.append('%s: %s' % (a[:MAX_LEN], v[:MAX_LEN]))
     app.logger.info('request OK, responding')
+    # Printing to STDOUT works in uWSGI but can break some
+    # application servers, always use a stream logger to print.
     print('*** apptester:print to STDOUT')
     resp = make_response('\n'.join(response + ['']))
     resp.headers['Content-Type'] = 'text/plain; charset=utf-8'
