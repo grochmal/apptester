@@ -1,10 +1,19 @@
 README for `apptester`
 
+[![Build Status][trbuild]][trlink]
+
+[trbuild]: https://api.travis-ci.org/grochmal/apptester.svg?branch=master
+[trlink]: https://travis-ci.org/grochmal/apptester "Travis CI"
+
 ## Introduction
 
 Just a simple app that echoes headers, and controls caching by GET arguments.
 It is meant for testing of web and application servers configuration.
 
+For example, one could check whether the load balancer and application server
+is passing enough environment parameters to determine whether HTTPS is in use.
+By connecting to the app through HTTP and then through HTTPS and checking the
+`scheme` and the `REQUEST_SCHEME` CGI/WSGI variable.
 
 ## Copying
 

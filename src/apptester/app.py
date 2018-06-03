@@ -20,9 +20,31 @@ def apptester():
     response = ['*** App Tester - Request Headers ***']
     for h, c in request.headers.items():
         response.append('%s: %s' % (h[:MAX_LEN], c[:MAX_LEN]))
-    response += ['*** App Tester - Arguments ***']
-    for a, v in request.args.items():
-        response.append('%s: %s' % (a[:MAX_LEN], v[:MAX_LEN]))
+    response.append('*** App Tester - Arguments ***')
+    for k, v in request.args.items():
+        response.append('%s: %s' % (k[:MAX_LEN], v[:MAX_LEN]))
+    response.append('*** App Tester - URL parameters ***')
+    response.append('URL: %s' % request.url)
+    response.append('DATE: %s' % request.date)
+    response.append('ENDPOINT: %s' % request.endpoint)
+    response.append('HOST: %s' % request.host)
+    response.append('PATH: %s' % request.path)
+    response.append('METHOD: %s' % request.method)
+    response.append('REFERRER: %s' % request.referrer)
+    response.append('REMOTE ADDR: %s' % request.remote_addr)
+    response.append('SCHEME: %s' % request.scheme)
+    response.append('HTTPS: %s' % request.is_secure)
+    response.append('MULTIPROCESS: %s' % request.is_multiprocess)
+    response.append('MULTITHREAD: %s' % request.is_multithread)
+    response.append('RUN ONCE: %s' % request.is_run_once)
+    response.append('XHR: %s' % request.is_xhr)
+    response.append('USER AGENT: %s' % request.user_agent)
+    response.append('*** App Tester - Cookies ***')
+    for k, v in request.cookies.items():
+        response.append('%s: %s' % (k[:MAX_LEN], v[:MAX_LEN]))
+    response.append('*** App Tester - Environment ***')
+    for h, c in request.environ.items():
+        response.append('%s: %s' % (h[:MAX_LEN], c))
     app.logger.info('request OK, responding')
     # Printing to STDOUT works in uWSGI but can break some
     # application servers, always use a stream logger to print.

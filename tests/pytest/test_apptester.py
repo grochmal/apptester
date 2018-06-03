@@ -31,6 +31,23 @@ def test_header(client):
     assert b'X-Request-Id: blah' in resp.data
 
 
+def test_xhr(client):
+    resp = client.get('/apptester',
+                      headers={'X-Requested-With': 'XMLHttpRequest'})
+    assert b'XHR: True' in resp.data
+
+
+def test_cookie(client):
+    resp = client.get('/apptester',
+                      headers={'Cookie': 'userid=13; sessionid=3'})
+    assert b'userid: 13' in resp.data
+
+
+def test_environment(client):
+    resp = client.get('/apptester')
+    assert b'wsgi.errors' in resp.data
+
+
 def test_argument(client):
     resp = client.get('/apptester?pink-parfait')
     assert b'pink-parfait' in resp.data
