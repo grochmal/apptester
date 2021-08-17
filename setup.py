@@ -39,7 +39,7 @@ PKG_DATA = {
 setup(
     name='apptester',
     description='App to test app-server configuration',
-    version='0.1',
+    version='0.2',
     author='Michal Grochmal',
     author_email='NmiOkeS@PgroAchmalM.org',
     license='GNU General Public License, version 3 or later',

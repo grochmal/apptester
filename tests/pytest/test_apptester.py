@@ -31,15 +31,21 @@ def test_header(client):
     assert b'X-Request-Id: blah' in resp.data
 
 
-def test_xhr(client):
-    resp = client.get('/apptester',
-                      headers={'X-Requested-With': 'XMLHttpRequest'})
-    assert b'XHR: True' in resp.data
+# deprecated, see https://github.com/pallets/flask/issues/2549
+#def test_xhr(client):
+#    resp = client.get('/apptester',
+#                      headers={'X-Requested-With': 'XMLHttpRequest'})
+#    assert b'XHR: True' in resp.data
 
 
 def test_cookie(client):
-    resp = client.get('/apptester',
-                      headers={'Cookie': 'userid=13; sessionid=3'})
+    # deprecated in werkzeug,
+    # see https://github.com/pallets/werkzeug/issues/1632
+    #resp = client.get('/apptester',
+    #                  headers={'Cookie': 'userid=13; sessionid=3'})
+    client.set_cookie('localhost', 'userid', '13')
+    client.set_cookie('localhost', 'sessionid', '3')
+    resp = client.get('/apptester')
     assert b'userid: 13' in resp.data
 
 
@@ -56,6 +62,12 @@ def test_argument(client):
 def test_cache(client):
     resp = client.get('/apptester?max-age=12')
     assert resp.headers['Cache-Control'] == 'max-age=12'
+
+
+def test_user_cache(client):
+    client.set_cookie('localhost', 'userid', '13')
+    resp = client.get('/apptester?max-age=12')
+    assert resp.headers['Cache-Control'] == 'no-cache'
 
 
 def test_cache_limit(client):

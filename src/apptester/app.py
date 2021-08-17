@@ -37,9 +37,11 @@ def apptester():
     response.append('MULTIPROCESS: %s' % request.is_multiprocess)
     response.append('MULTITHREAD: %s' % request.is_multithread)
     response.append('RUN ONCE: %s' % request.is_run_once)
-    response.append('XHR: %s' % request.is_xhr)
+    # deprecated, see https://github.com/pallets/flask/issues/2549
+    #response.append('XHR: %s' % request.is_xhr)
     response.append('USER AGENT: %s' % request.user_agent)
     response.append('*** App Tester - Cookies ***')
+    print(request.cookies)
     for k, v in request.cookies.items():
         response.append('%s: %s' % (k[:MAX_LEN], v[:MAX_LEN]))
     response.append('*** App Tester - Environment ***')
@@ -51,11 +53,16 @@ def apptester():
     print('*** apptester:print to STDOUT')
     resp = make_response('\n'.join(response + ['']))
     resp.headers['Content-Type'] = 'text/plain; charset=utf-8'
-    if request.args.get('raise'):
+    # play exceptions safe, tests will come from localhost
+    addr = request.remote_addr
+    if request.args.get('raise') and '127.0.0.1' == addr:
         raise RuntimeError('Boom!')
     max_age = request.args.get('max-age')
     if max_age and max_age.isdigit():
         max_age = min(int(max_age), MAX_CACHE)
         resp.headers['Cache-Control'] = 'max-age=%i' % max_age
+    user = request.cookies.get('userid')
+    if user:
+        resp.headers['Cache-Control'] = 'no-cache'
     return resp
 
